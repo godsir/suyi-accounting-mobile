@@ -1,0 +1,15 @@
+{
+  "build": {
+    "ios": {
+      "project": "ios/App/App.xcworkspace",
+      "scheme": "App",
+      "configuration": "Release",
+      "xcodeVersion": "15.4",
+      "nodeVersion": "18.x"
+    }
+  },
+  "test": {},
+  "distribute": {
+    "groups": []
+  }
+}
