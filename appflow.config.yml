@@ -1,0 +1,22 @@
+version: 1
+builds:
+  development:
+    platform: ios
+    environment: development
+    steps:
+      - name: Install dependencies
+        script: npm ci
+      - name: Build app
+        script: npm run build
+      - name: Sync Capacitor
+        script: npx cap sync ios
+  production:
+    platform: ios
+    environment: production
+    steps:
+      - name: Install dependencies
+        script: npm ci --production
+      - name: Build app for production
+        script: npm run build
+      - name: Sync Capacitor
+        script: npx cap sync ios

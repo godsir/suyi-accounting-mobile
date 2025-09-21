@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Suyi记账</string>
+    <string name="title_activity_main">Suyi记账</string>
+    <string name="package_name">com.suyi.accounting</string>
+    <string name="custom_url_scheme">com.suyi.accounting</string>
+</resources>

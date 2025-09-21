@@ -1,0 +1,8 @@
+{
+  "name": "suyi-accounting-mobile",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue",
+  "id": "suyi-accounting-mobile"
+}

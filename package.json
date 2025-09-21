@@ -1,0 +1,55 @@
+{
+  "name": "suyi-accounting-mobile",
+  "version": "1.0.0",
+  "description": "Suyi记账移动端Web应用",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:check": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "serve": "npm run dev",
+    "cap:build": "npm run build && npx cap sync",
+    "cap:android": "npm run cap:build && npx cap open android",
+    "cap:ios": "npm run cap:build && npx cap open ios",
+    "cap:sync": "npx cap sync"
+  },
+  "keywords": [
+    "vue3",
+    "typescript",
+    "accounting",
+    "mobile",
+    "pwa"
+  ],
+  "author": "Suyi",
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/app": "^7.1.0",
+    "@capacitor/cli": "^7.4.3",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/haptics": "^7.0.2",
+    "@capacitor/ios": "^7.4.3",
+    "@capacitor/keyboard": "^7.0.3",
+    "@capacitor/network": "^7.0.2",
+    "@capacitor/splash-screen": "^7.0.3",
+    "@capacitor/status-bar": "^7.0.3",
+    "@element-plus/icons-vue": "^2.3.2",
+    "axios": "^1.5.0",
+    "dayjs": "^1.11.18",
+    "echarts": "^5.5.1",
+    "element-plus": "^2.11.3",
+    "pinia": "^2.1.6",
+    "vue": "^3.3.4",
+    "vue-echarts": "^7.0.3",
+    "vue-router": "^4.2.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.3.4",
+    "sass": "^1.66.1",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9",
+    "vite-plugin-pwa": "^0.16.4",
+    "vue-tsc": "^1.8.8"
+  }
+}
