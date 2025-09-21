@@ -57,8 +57,11 @@ const activeTab = ref('income')
 const tabContentRef = ref<HTMLElement>()
 const translateX = ref(0)
 const startX = ref(0)
+const startY = ref(0)
 const currentX = ref(0)
+const currentY = ref(0)
 const isDragging = ref(false)
+const isHorizontalDrag = ref(false)
 const currentIndex = ref(0) // 0: 收入, 1: 支出
 
 // 根据路由参数设置默认Tab
@@ -82,63 +85,81 @@ const switchTab = (tab: string) => {
 // 触摸事件处理
 const handleTouchStart = (e: TouchEvent) => {
   startX.value = e.touches[0].clientX
+  startY.value = e.touches[0].clientY
   currentX.value = startX.value
+  currentY.value = startY.value
   isDragging.value = true
+  isHorizontalDrag.value = false
 }
 
 const handleTouchMove = (e: TouchEvent) => {
   if (!isDragging.value) return
   
-  // 防止默认的滚动行为
-  e.preventDefault()
-  
   currentX.value = e.touches[0].clientX
+  currentY.value = e.touches[0].clientY
+  
   const deltaX = currentX.value - startX.value
-  const baseTranslateX = -currentIndex.value * window.innerWidth
+  const deltaY = currentY.value - startY.value
   
-  // 添加阻尼效果，减少滑动敏感度
-  const dampingFactor = 0.4
-  const dampedDeltaX = deltaX * dampingFactor
+  // 判断滑动方向 - 只在首次移动时判断
+  if (!isHorizontalDrag.value && (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10)) {
+    isHorizontalDrag.value = Math.abs(deltaX) > Math.abs(deltaY)
+  }
   
-  // 限制滑动范围
-  const newTranslateX = baseTranslateX + dampedDeltaX
-  const maxTranslateX = window.innerWidth * 0.1 // 允许轻微超出边界
-  const minTranslateX = -window.innerWidth * 1.1
-  
-  translateX.value = Math.max(minTranslateX, Math.min(maxTranslateX, newTranslateX))
+  // 只有在水平滑动时才处理Tab切换和阻止默认行为
+  if (isHorizontalDrag.value) {
+    e.preventDefault()
+    
+    const baseTranslateX = -currentIndex.value * window.innerWidth
+    
+    // 添加阻尼效果，减少滑动敏感度
+    const dampingFactor = 0.4
+    const dampedDeltaX = deltaX * dampingFactor
+    
+    // 限制滑动范围
+    const newTranslateX = baseTranslateX + dampedDeltaX
+    const maxTranslateX = window.innerWidth * 0.1 // 允许轻微超出边界
+    const minTranslateX = -window.innerWidth * 1.1
+    
+    translateX.value = Math.max(minTranslateX, Math.min(maxTranslateX, newTranslateX))
+  }
 }
 
 const handleTouchEnd = () => {
   if (!isDragging.value) return
   
-  const deltaX = currentX.value - startX.value
-  const velocity = Math.abs(deltaX) // 简单的速度计算
-  
-  // 提高切换阈值，降低敏感度
-  const distanceThreshold = window.innerWidth * 0.5 // 50% 屏幕宽度
-  const velocityThreshold = 120 // 快速滑动的最小距离
-  
-  // 判断是否应该切换
-  const shouldSwitch = Math.abs(deltaX) > distanceThreshold || 
-                      (velocity > velocityThreshold && Math.abs(deltaX) > window.innerWidth * 0.25)
-  
-  if (shouldSwitch) {
-    if (deltaX > 0 && currentIndex.value === 1) {
-      // 向右滑动，从支出切换到收入
-      switchTab('income')
-    } else if (deltaX < 0 && currentIndex.value === 0) {
-      // 向左滑动，从收入切换到支出
-      switchTab('expense')
+  // 只有在水平滑动时才处理Tab切换
+  if (isHorizontalDrag.value) {
+    const deltaX = currentX.value - startX.value
+    const velocity = Math.abs(deltaX) // 简单的速度计算
+    
+    // 提高切换阈值，降低敏感度
+    const distanceThreshold = window.innerWidth * 0.5 // 50% 屏幕宽度
+    const velocityThreshold = 120 // 快速滑动的最小距离
+    
+    // 判断是否应该切换
+    const shouldSwitch = Math.abs(deltaX) > distanceThreshold || 
+                        (velocity > velocityThreshold && Math.abs(deltaX) > window.innerWidth * 0.25)
+    
+    if (shouldSwitch) {
+      if (deltaX > 0 && currentIndex.value === 1) {
+        // 向右滑动，从支出切换到收入
+        switchTab('income')
+      } else if (deltaX < 0 && currentIndex.value === 0) {
+        // 向左滑动，从收入切换到支出
+        switchTab('expense')
+      } else {
+        // 回弹到当前页面
+        translateX.value = -currentIndex.value * window.innerWidth
+      }
     } else {
       // 回弹到当前页面
       translateX.value = -currentIndex.value * window.innerWidth
     }
-  } else {
-    // 回弹到当前页面
-    translateX.value = -currentIndex.value * window.innerWidth
   }
   
   isDragging.value = false
+  isHorizontalDrag.value = false
 }
 </script>
 
